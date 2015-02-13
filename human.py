@@ -94,15 +94,19 @@ class Human(object):
 		else:
 			return False
 
+	def makeLoveNotWar(self, lover):
+		
+
 	def meetAndGreat(self, world):#FIGHT YE BASTARDS
 		humans = self.look(world, Human)
 		if humans[0]:
 			if not world[self.posx][self.NORTH].isHere == None:
 				if not self == world[self.posx][self.NORTH].isHere:
-					
+					encounter = world[self.posx][self.NORTH].isHere
 					if self.agressive():
-					self.fightYeBastards(world[self.posx][self.NORTH].isHere)
-
+						self.fightYeBastards(encounter)
+					else:
+						self.makeLoveNotWar(encounter)
 		elif humans[1]:
 			if not world[self.East][self.posy].isHere == None:
 				if not self == world[self.East][self.posy].isHere:
