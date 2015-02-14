@@ -89,16 +89,22 @@ class Human(object):
 		return force
 	def agressive(self):
 		a = random.randrange(2)
-		if a = 1:
+		if a == 1:
 			return True
 		else:
 			return False
 
 	def makeLoveNotWar(self, lover):
-		
+		baby = None
+		if self.age >= 1000 and lover.age >= 1000: 
+			name = self.name + lover.name
+			baby = Human(name,self.posx+2, self.posy)
+			print(baby)
+		return baby
 
 	def meetAndGreat(self, world):#FIGHT YE BASTARDS
 		humans = self.look(world, Human)
+		baby = None
 		if humans[0]:
 			if not world[self.posx][self.NORTH].isHere == None:
 				if not self == world[self.posx][self.NORTH].isHere:
@@ -106,25 +112,39 @@ class Human(object):
 					if self.agressive():
 						self.fightYeBastards(encounter)
 					else:
-						self.makeLoveNotWar(encounter)
+						baby = self.makeLoveNotWar(encounter)
 		elif humans[1]:
-			if not world[self.East][self.posy].isHere == None:
-				if not self == world[self.East][self.posy].isHere:
-					self.fightYeBastards(world[self.East][self.posy].isHere)
+			if not world[self.EAST][self.posy].isHere == None:
+				if not self == world[self.EAST][self.posy].isHere:
+					encounter = world[self.EAST][self.posy].isHere
+					if self.agressive():
+						self.fightYeBastards(encounter)
+					else:
+						baby = self.makeLoveNotWar(encounter)
 		elif humans[2]:
 			if not world[self.posx][self.SOUTH].isHere == None:
 				if not self == world[self.posx][self.SOUTH].isHere:
-					self.fightYeBastards(world[self.posx][self.SOUTH].isHere)
+					encounter = world[self.posx][self.SOUTH].isHere
+					if self.agressive():
+						self.fightYeBastards(encounter)
+					else:
+						baby = self.makeLoveNotWar(encounter)
 		elif humans[3]:
 			if not world[self.WEST][self.posy].isHere == None:
 				if not self == world[self.WEST][self.posy].isHere:
-					self.fightYeBastards(world[self.WEST][self.posy].isHere)
+					encounter = world[self.WEST][self.posy].isHere
+					if self.agressive():
+						self.fightYeBastards(encounter)
+					else:
+						baby = self.makeLoveNotWar(encounter)
+		return baby
 
 	def doStuff(self, world):
-		self.meetAndGreat(world)
-		self.walk(world)
+		baby = self.meetAndGreat(world)
 		self.posx = self.wrapAround(self.posx, len(world))
 		self.posy = self.wrapAround(self.posy, len(world))
+		self.walk(world)
+		return baby
 
 
 if __name__ == '__main__':

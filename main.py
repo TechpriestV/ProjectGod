@@ -47,7 +47,9 @@ def createHumans(worldSize):
 
 def updateWorld(world, humans):
 	for i in humans:
-		i.doStuff(world)
+		baby = i.doStuff(world)
+		if not baby == None:
+			humans.append(baby)
 		world[i.posx][i.posy].place(i)
 		if i.alive == False:
 			world[i.posx][i.posy].isHere = None
