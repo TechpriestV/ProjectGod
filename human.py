@@ -15,6 +15,8 @@ class Human(object):
 		self.EAST = self.posx + 1
 		self.SOUTH = self.posy + 1
 		self.WEST = self.posx -1
+		self.partner = None
+		self.children = []
 		self.friends = []
 	def __str__(self):
 		tmp = "Hi, my name is " + self.name + " and my age is " + str(self.age) +" cycles, I am at X:" + str(self.posx) +" Y:"+ str(self.posy)
@@ -38,6 +40,7 @@ class Human(object):
 			return False
 		else:
 			return False
+
 	def doWalk(self, addX, addY):
 		self.posx = self.posx + addX
 		self.posy = self.posy + addY
@@ -87,7 +90,10 @@ class Human(object):
 	def punch(self):
 		force = random.randrange(20) + self.baseStrenght
 		return force
-	def agressive(self):
+
+	def agressive(self, encounter):
+		if encounter in self.friends:
+			return False
 		a = random.randrange(2)
 		if a == 1:
 			return True
@@ -96,10 +102,16 @@ class Human(object):
 
 	def makeLoveNotWar(self, lover):
 		baby = None
-		if self.age >= 1000 and lover.age >= 1000: 
-			name = self.name + lover.name
-			baby = Human(name,self.posx+2, self.posy)
-			print(baby)
+		if self.partner == None:
+			if lover.partner == None:
+				self.partner = lover
+				lover.partner = self
+		if self.partner == lover:
+			if self.age >= 1000 and lover.age >= 1000:
+				name = self.name + lover.name
+				baby = Human(name,self.posx+2, self.posy)
+				self.children.append(baby)
+				lover.children.append(baby )
 		return baby
 
 	def meetAndGreat(self, world):#FIGHT YE BASTARDS
@@ -109,9 +121,11 @@ class Human(object):
 			if not world[self.posx][self.NORTH].isHere == None:
 				if not self == world[self.posx][self.NORTH].isHere:
 					encounter = world[self.posx][self.NORTH].isHere
-					if self.agressive():
+					if self.agressive(encounter):
 						self.fightYeBastards(encounter)
 					else:
+						if not encounter in self.friends:
+							self.friends.append(encounter)
 						baby = self.makeLoveNotWar(encounter)
 		elif humans[1]:
 			if not world[self.EAST][self.posy].isHere == None:
