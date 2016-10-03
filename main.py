@@ -38,7 +38,7 @@ def drawWorld(world):
 
 def createHumans(worldSize):
 	humans = []
-	names = ["Bob", "Hugo", "Steve", "Lars", "Ola", "Per", "Rob"]
+	names = ["Bob", "Hugo", "Steve", "Lars", "Ola", "Per", "Rob", "Eve", "Joe", "Ava"]
 	for i in names:
 		human = Human(i, random.randrange(worldSize), random.randrange(worldSize))
 	#bob = Human("bob", 1, 1)
@@ -49,13 +49,12 @@ def updateWorld(world, humans):
 	for i in humans:
 		baby = i.doStuff(world)
 		if not baby == None:
+			print(baby)
 			humans.append(baby)
 		world[i.posx][i.posy].place(i)
 		if i.alive == False:
 			world[i.posx][i.posy].isHere = None
 			humans.remove(i)
-	for i in humans:
-		i.age += 1
 	return world, humans
 
 def main(humans, world):
@@ -74,11 +73,12 @@ def main(humans, world):
 	print("It took ", cycles, " cycles for everyone but one die")
 	for i in humans:
 		print(i)
+	#drawWorld(world)
 
 if __name__ == '__main__':
 	empty = "_"
-	worldSize = 128
+	worldSize = 10
 	world = createWorld(worldSize, empty)
 	humans = createHumans(worldSize)
+	print("Starting simulation")
 	main(humans, world)
-

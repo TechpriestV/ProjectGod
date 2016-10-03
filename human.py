@@ -10,12 +10,15 @@ class Human(object):
 		self.alive = True
 		self.baseStrenght = 5
 		self.age = 0
+		self.ageOfMaturity = 5000
 		self.preferenceOfDirection = self.decideWhereToWalk()
 		self.NORTH = self.posy -1
 		self.EAST = self.posx + 1
 		self.SOUTH = self.posy + 1
 		self.WEST = self.posx -1
 		self.friends = []
+		self.partner = None
+		self.timeSinceBaby = 0
 	def __str__(self):
 		tmp = "Hi, my name is " + self.name + " and my age is " + str(self.age) +" cycles, I am at X:" + str(self.posx) +" Y:"+ str(self.posy)
 		return tmp
@@ -38,6 +41,7 @@ class Human(object):
 			return False
 		else:
 			return False
+
 	def doWalk(self, addX, addY):
 		self.posx = self.posx + addX
 		self.posy = self.posy + addY
@@ -87,19 +91,30 @@ class Human(object):
 	def punch(self):
 		force = random.randrange(20) + self.baseStrenght
 		return force
-	def agressive(self):
-		a = random.randrange(2)
-		if a == 1:
-			return True
+
+	def agressive(self, encounter):
+		if encounter not in self.friends:
+			a = random.randrange(2)
+			if a > 0.1:
+				return True
+			else:
+				return False
 		else:
-			return False
+			a = random.randrange(2)
+			if a > 0.99:
+				return True
+			else:
+				return False
 
 	def makeLoveNotWar(self, lover):
 		baby = None
-		if self.age >= 1000 and lover.age >= 1000: 
-			name = self.name + lover.name
-			baby = Human(name,self.posx+2, self.posy)
-			print(baby)
+		if self.partner == None or self.partner == lover:
+			if self.age >= self.ageOfMaturity and lover.age >= lover.ageOfMaturity and self.timeSinceBaby > 300 and lover.timeSinceBaby > 300:
+				name = self.name + lover.name
+				baby = Human(name,self.posx+2, self.posy)
+				self.partner = lover
+				self.timeSinceBaby = 0
+				lover.timeSinceBaby = 0
 		return baby
 
 	def meetAndGreat(self, world):#FIGHT YE BASTARDS
@@ -109,34 +124,38 @@ class Human(object):
 			if not world[self.posx][self.NORTH].isHere == None:
 				if not self == world[self.posx][self.NORTH].isHere:
 					encounter = world[self.posx][self.NORTH].isHere
-					if self.agressive():
+					if self.agressive(encounter):
 						self.fightYeBastards(encounter)
 					else:
 						baby = self.makeLoveNotWar(encounter)
+						self.friends.append(encounter)
 		elif humans[1]:
 			if not world[self.EAST][self.posy].isHere == None:
 				if not self == world[self.EAST][self.posy].isHere:
 					encounter = world[self.EAST][self.posy].isHere
-					if self.agressive():
+					if self.agressive(encounter):
 						self.fightYeBastards(encounter)
 					else:
 						baby = self.makeLoveNotWar(encounter)
+						self.friends.append(encounter)
 		elif humans[2]:
 			if not world[self.posx][self.SOUTH].isHere == None:
 				if not self == world[self.posx][self.SOUTH].isHere:
 					encounter = world[self.posx][self.SOUTH].isHere
-					if self.agressive():
+					if self.agressive(encounter):
 						self.fightYeBastards(encounter)
 					else:
 						baby = self.makeLoveNotWar(encounter)
+						self.friends.append(encounter)
 		elif humans[3]:
 			if not world[self.WEST][self.posy].isHere == None:
 				if not self == world[self.WEST][self.posy].isHere:
 					encounter = world[self.WEST][self.posy].isHere
-					if self.agressive():
+					if self.agressive(encounter):
 						self.fightYeBastards(encounter)
 					else:
 						baby = self.makeLoveNotWar(encounter)
+						self.friends.append(encounter)
 		return baby
 
 	def doStuff(self, world):
@@ -144,9 +163,10 @@ class Human(object):
 		self.posx = self.wrapAround(self.posx, len(world))
 		self.posy = self.wrapAround(self.posy, len(world))
 		self.walk(world)
+		self.timeSinceBaby += 1
+		self.age += 1
 		return baby
 
 
 if __name__ == '__main__':
 	bob = Human("bob", 1, 1)
-	print(bob)
