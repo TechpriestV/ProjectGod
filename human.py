@@ -118,47 +118,31 @@ class Human(object):
 				lover.timeSinceBaby = 0
 		return baby
 
+	def __meetAndGreatInteraction(self, posOne, posTwo, world):
+		baby = None
+		if not world[posOne][posTwo].isHere == None:
+			if not self == world[posOne][posTwo].isHere:
+				encounter = world[posOne][posTwo].isHere
+				if self.agressive(encounter):
+					self.fightYeBastards(encounter)
+				else:
+					if not encounter in self.friends:
+						self.friends.append(encounter)
+					baby = self.makeLoveNotWar(encounter)
+					self.friends.append(encounter)
+		return baby
+
 	def meetAndGreat(self, world):#FIGHT YE BASTARDS
 		humans = self.look(world, Human)
 		baby = None
 		if humans[0]:
-			if not world[self.posx][self.NORTH].isHere == None:
-				if not self == world[self.posx][self.NORTH].isHere:
-					encounter = world[self.posx][self.NORTH].isHere
-					if self.agressive(encounter):
-						self.fightYeBastards(encounter)
-					else:
-						if not encounter in self.friends:
-							self.friends.append(encounter)
-						baby = self.makeLoveNotWar(encounter)
-						self.friends.append(encounter)
+			self.__meetAndGreatInteraction(self.posx, self.NORTH, world)
 		elif humans[1]:
-			if not world[self.EAST][self.posy].isHere == None:
-				if not self == world[self.EAST][self.posy].isHere:
-					encounter = world[self.EAST][self.posy].isHere
-					if self.agressive(encounter):
-						self.fightYeBastards(encounter)
-					else:
-						baby = self.makeLoveNotWar(encounter)
-						self.friends.append(encounter)
+			self.__meetAndGreatInteraction(self.EAST, self.posy, world)
 		elif humans[2]:
-			if not world[self.posx][self.SOUTH].isHere == None:
-				if not self == world[self.posx][self.SOUTH].isHere:
-					encounter = world[self.posx][self.SOUTH].isHere
-					if self.agressive(encounter):
-						self.fightYeBastards(encounter)
-					else:
-						baby = self.makeLoveNotWar(encounter)
-						self.friends.append(encounter)
+			self.__meetAndGreatInteraction(self.posx, self.SOUTH, world)
 		elif humans[3]:
-			if not world[self.WEST][self.posy].isHere == None:
-				if not self == world[self.WEST][self.posy].isHere:
-					encounter = world[self.WEST][self.posy].isHere
-					if self.agressive(encounter):
-						self.fightYeBastards(encounter)
-					else:
-						baby = self.makeLoveNotWar(encounter)
-						self.friends.append(encounter)
+			self.__meetAndGreatInteraction(self.WEST, self.posy, world)
 		return baby
 
 	def doStuff(self, world):
