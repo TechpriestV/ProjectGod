@@ -16,6 +16,8 @@ class Human(object):
 		self.EAST = self.posx + 1
 		self.SOUTH = self.posy + 1
 		self.WEST = self.posx -1
+		self.partner = None
+		self.children = []
 		self.friends = []
 		self.partner = None
 		self.timeSinceBaby = 0
@@ -93,12 +95,11 @@ class Human(object):
 		return force
 
 	def agressive(self, encounter):
-		if encounter not in self.friends:
-			a = random.randrange(2)
-			if a > 0.1:
-				return True
-			else:
-				return False
+		if encounter in self.friends:
+			return False
+		a = random.randrange(2)
+		if a == 1:
+			return True
 		else:
 			a = random.randrange(2)
 			if a > 0.99:
@@ -127,6 +128,8 @@ class Human(object):
 					if self.agressive(encounter):
 						self.fightYeBastards(encounter)
 					else:
+						if not encounter in self.friends:
+							self.friends.append(encounter)
 						baby = self.makeLoveNotWar(encounter)
 						self.friends.append(encounter)
 		elif humans[1]:
