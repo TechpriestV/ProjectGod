@@ -3,7 +3,7 @@
 
 from human import Human
 from ground import GroundTile
-import time, os, random
+import time, os, random, sys
 #from Tkinter import tkinter
 
 def createWorld(size, empty):
@@ -28,12 +28,11 @@ def drawWorld(world):
 	for i in world:
 		for j in i:
 			if j.isHere == None:
-				row = row + "_"
+				row = row + " "
 			else:
 				row = row + j.isHere.name[0]
-		print(row)
-		row = ""
-	print("\n")
+		row += "\n"
+	return(row)
 
 
 def createHumans(worldSize):
@@ -49,36 +48,46 @@ def updateWorld(world, humans):
 	for i in humans:
 		baby = i.doStuff(world)
 		if not baby == None:
-			print(baby)
+			#print(baby)
 			humans.append(baby)
 		world[i.posx][i.posy].place(i)
 		if i.alive == False:
 			world[i.posx][i.posy].isHere = None
 			humans.remove(i)
+			#for i in humans:
+	 		#	print(i)
 	return world, humans
 
 def main(humans, world):
 	cycles = 0
 	pongs = 0
-	while len(humans)>1:
-		world, humans = updateWorld(world, humans)
-		"""
-		print("There should be something printed here")
-		for i in world:
-			for j in i:
-				if not j.isHere == None:
-					print(j)
-		"""
-		cycles += 1
-	print("It took ", cycles, " cycles for everyone but one die")
-	for i in humans:
-		print(i)
+	try:
+		while len(humans)>1:
+			world, humans = updateWorld(world, humans)
+			"""
+			print("There should be something printed here")
+			for i in world:
+				for j in i:
+					if not j.isHere == None:
+						print(j)
+			"""
+			#print(drawWorld(world), end="\r")
+			cycles += 1
+			print("Cycle: ", cycles, "	","Humans: ", len(humans), end="\r")
+		print("It took ", cycles, " cycles for everyone but one die")
+		for i in humans:
+			print(i)
+	except KeyboardInterrupt as e:
+		for i in humans:
+ 			print(i)
+		sys.exit()
 	#drawWorld(world)
 
 if __name__ == '__main__':
 	empty = "_"
-	worldSize = 10
+	worldSize = 50
 	world = createWorld(worldSize, empty)
 	humans = createHumans(worldSize)
 	print("Starting simulation")
+
 	main(humans, world)

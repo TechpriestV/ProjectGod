@@ -113,6 +113,7 @@ class Human(object):
 			if self.age >= self.ageOfMaturity and lover.age >= lover.ageOfMaturity and self.timeSinceBaby > 300 and lover.timeSinceBaby > 300:
 				name = self.name + lover.name
 				baby = Human(name,self.posx+2, self.posy)
+				#print(baby)
 				self.partner = lover
 				self.timeSinceBaby = 0
 				lover.timeSinceBaby = 0
@@ -146,6 +147,8 @@ class Human(object):
 		return baby
 
 	def doStuff(self, world):
+		#Age check is needed to be done, so it's not an infinite loop of pairs
+		#Should also do so they don't kill their children
 		baby = self.meetAndGreat(world)
 		self.posx = self.wrapAround(self.posx, len(world))
 		self.posy = self.wrapAround(self.posy, len(world))
